@@ -1,0 +1,22 @@
+*
+{
+    font-family: sans-serif;
+}
+
+body
+{
+}
+
+head
+{
+    display: block;
+}
+
+head title
+{
+    display: block;
+    border-bottom: 1px solid black;
+    padding: 4px 10px;
+}
+
+

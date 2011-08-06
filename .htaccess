@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteBase /~mdeininger/funky/
+
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} !-f
+RewriteRule js/cache/([a-zA-Z0-9/]+)\.js$ js/cache.php?n=$1 [L]
