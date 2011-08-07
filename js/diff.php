@@ -69,16 +69,11 @@ function recurse (DOMNode $to, $tl)
     for ($j = 0; $j < $tn->length; $j++)
     {
         $tnn = $tn->item($j);
-        if (!(($tnn->nodeName == 'script') &&
-              ($tnn->attributes->getNamedItem('src')->nodeValue
-                  == 'js/bonkers.js')))
-        {
-            list($q,$n) = recurse($tnn, $tl.'.childNodes['.$j.']');
-            $r = array_merge($r,$q);
-            $sl[] = $q[0];
-            $ni=array_merge($n,$ni);
-            $tr = $tnn->ownerDocument->saveXML($tnn);
-        }
+        list($q,$n) = recurse($tnn, $tl.'.childNodes['.$j.']');
+        $r = array_merge($r,$q);
+        $sl[] = $q[0];
+        $ni=array_merge($n,$ni);
+        $tr = $tnn->ownerDocument->saveXML($tnn);
     }
 
     $sn = md5($tx = $to->ownerDocument->saveXML($to));
@@ -88,6 +83,28 @@ function recurse (DOMNode $to, $tl)
 
     return array($r,$ni);
 }
+
+function prune (DOMNode $to)
+{
+    $tn = $to->childNodes;
+    for ($j = 0; $j < $tn->length; $j++)
+    {
+        $tnn = $tn->item($j);
+        if (($tnn->nodeName == 'script') &&
+            ($tnn->attributes->getNamedItem('src')->nodeValue
+                == 'js/bonkers.js'))
+        {
+            $to->removeChild($tnn);
+            $j = -1;
+        }
+        else
+        {
+            prune ($tnn);
+        }
+    }
+}
+
+prune($to->getElementsByTagName('html')->item(0));
 
 list($patch, $nodes) = recurse
     ($to->getElementsByTagName('html')->item(0),

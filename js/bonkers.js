@@ -250,7 +250,7 @@ function runScript(script,c)
 
     var d = document.getElementsByTagName('body');
 
-    if (c == false)
+    if (c != false)
     {
         pushPatchContext(c);
     }
@@ -260,7 +260,44 @@ function runScript(script,c)
     d[0].appendChild( e );
 }
 
+function indexNodes()
+{
+    function recurseIndex(node)
+    {
+        var n = node;
+
+        if (n == null)
+        {
+            return;
+        }
+
+        if (n.nodeType == 1) /* element */
+        {
+            var np = document.createElement(n.nodeName);
+            var nc = n.cloneNode(true);
+            np.appendChild(nc);
+            nodeData(hex_md5(np.innerHTML), nc);
+            recurseIndex(n.childNodes);
+        }
+        else if ((n.nodeType == 3) || (n.nodeType == 4))
+        {
+            var nc = n.cloneNode(true);
+            nodeData(hex_md5(nc.textContent), nc);
+        }
+
+        recurseIndex(node.firstChild);
+        recurseIndex(node.nextSibling);
+    }
+
+    runScript
+        ('js/paj-md5.js',
+         function()
+            { var d = document.getElementsByTagName('body');
+              recurseIndex(d[0]); });
+}
+
 function goNuts()
 {
     tagPatches();
+    indexNodes();
 }
