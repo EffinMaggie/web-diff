@@ -1,3 +1,5 @@
+Options -MultiViews
+
 RewriteEngine on
 RewriteBase /~mdeininger/funky/
 
